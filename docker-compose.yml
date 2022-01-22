@@ -9,7 +9,7 @@ services:
     env_file:
       - .env
     volumes:
-      - ./static:/root/
+      - ./static:/static/
   modsecwaf:
     image: owasp/modsecurity-crs:3.3.2-nginx
     container_name: modsecwaf
