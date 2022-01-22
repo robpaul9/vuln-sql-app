@@ -29,7 +29,7 @@ func New(config *Config) *Server {
 }
 
 func (s *Server) Start() {
-	http.HandleFunc("/vulnapp/", s.MessageHandler)
+	http.HandleFunc("/", s.MessageHandler)
 
 	address := fmt.Sprintf("0.0.0.0:%s", s.ServicePort)
 	s.Logger.Infof("application is serving on %s", address)
@@ -40,7 +40,7 @@ func (s *Server) Start() {
 
 func (s *Server) MessageHandler(w http.ResponseWriter, r *http.Request) {
 
-        if r.URL.Path != "/vulnapp/" {
+	if r.URL.Path != "/" {
 		http.Error(w, "404 not found.", http.StatusNotFound)
 		return
 	}

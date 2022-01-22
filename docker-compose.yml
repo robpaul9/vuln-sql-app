@@ -10,6 +10,22 @@ services:
       - .env
     volumes:
       - ./static:/root/
+  modsecwaf:
+    image: owasp/modsecurity-crs:3.3.2-nginx
+    container_name: modsecwaf
+    ports:
+      - "9085:80"
+    environment:
+      - PARANOIA=1
+      - BACKEND=http://ec2-34-238-41-172.compute-1.amazonaws.com:8080/
+      - EXECUTING_PARANOIA=2
+      - ENFORCE_BODYPROC_URLENCODED=1
+      - ANOMALY_INBOUND=2
+      - ANOMALY_OUTBOUND=2
+      - PROXY=1
+      - MODSEC_RULE_ENGINE=on
+      - MODSEC_REQ_BODY_ACCESS=on
+    restart: always
   postgresdb:
     image: postgres:14
     container_name: postgresdb
@@ -26,4 +42,4 @@ services:
     restart: always
 secrets:
   postgres_db_password:
-    file: ./secrets/postgress_db_password
+    file: ./.secrets/postgress_db_password

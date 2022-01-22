@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/joho/godotenv"
+	"github.com/robpaul9/vulnsqlapp/adapters/aws"
 	"github.com/robpaul9/vulnsqlapp/adapters/db"
 	"github.com/robpaul9/vulnsqlapp/adapters/records"
 	"github.com/robpaul9/vulnsqlapp/adapters/server"
@@ -13,21 +14,20 @@ func main() {
 
 	config := config.NewConfig()
 
-	// TODO add param store support
-	//awsService := aws.New(&aws.Config{
-	//Logger: config.Logger,
-	//})
+	awsService := aws.New(&aws.Config{
+		Logger: config.Logger,
+	})
 
-	//dbPassword, err := awsService.SSMVC.Param(config.DBPasswordParam, true).GetValue()
-	//if err != nil {
-	//config.Logger.Panic(err)
-	//}
+	dbPassword, err := awsService.SSMVC.Param(config.DBPasswordParam, true).GetValue()
+	if err != nil {
+		config.Logger.Panic(err)
+	}
 
 	database, err := db.New(
 		&db.Config{
 			DatabaseName: config.DBName,
 			Host:         config.DBHost,
-			Password:     config.DBPassword,
+			Password:     dbPassword,
 			User:         config.DBUser,
 			Port:         config.DBPort,
 		})
